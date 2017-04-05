@@ -33,13 +33,31 @@ namespace ExcelWriter
 				Console.WriteLine("Worksheet could not be created. Check that your office installation and project references are correct.");
 			}
 
-			Range rng = ws.get_Range("A1", "O1");
-			object[] intArray = new object[] { 1, 2, 3, "Some Text", 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-			rng.Value = intArray;
-			ListObject table = ws.ListObjects.AddEx(XlListObjectSourceType.xlSrcRange, rng, XlYesNoGuess.xlNo);
+			object[] tempValues = new object[] { 1, 2, 3, "Some Text", 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
+			Range rng = ws.get_Range(GetExcelColumn(1, 1), GetExcelColumn(15, 10));
+			int rowsCount = 10;
+			int columnsCount = 15;
+			object[,] valArray = new object[rowsCount, columnsCount];
+
+			for (int i = 0; i < rowsCount; i++)
+			{
+				for (int j = 0; j < columnsCount; j++)
+				{
+					valArray[i, j] = tempValues[j];
+				}
+			}
+			rng.Value = valArray;
+			ListObject table = ws.ListObjects.AddEx(XlListObjectSourceType.xlSrcRange, rng, XlYesNoGuess.xlNo);
 			table.Name = "MyTableStyle";
 			table.TableStyle = "TableStyleLight9";
+
+			for (int i = 0; i < rowsCount; i++)
+			{
+				rng = ws.get_Range("D" + (2 + i), missing);
+				Hyperlink hp = ws.Hyperlinks.Add(rng, "https://duckduckgo.com/", string.Empty, "Best Search Engine which doesn't Track you.", "Search Engine");
+			}
+
 			for (int i = 1; i <= ws.UsedRange.Columns.Count; i++)
 			{
 				if (ws.Cells[1, i].Value2 != null)
@@ -47,9 +65,6 @@ namespace ExcelWriter
 					ws.Cells[1, i].Value2 = columns[i - 1];
 				}
 			}
-
-			rng = ws.get_Range("D2", missing);
-			Hyperlink hp = ws.Hyperlinks.Add(rng, "https://duckduckgo.com/", string.Empty, "Best Search Engine which doesn't Track you.", "Search Engine");
 
 			try
 			{
@@ -78,6 +93,27 @@ namespace ExcelWriter
 				Marshal.FinalReleaseComObject(excel);
 			}
 			catch (Exception) { }
+		}
+
+		private string GetExcelColumn(int columnNumber, int rowNumber)
+		{
+			return GetExcelColumnString(columnNumber) + rowNumber;
+		}
+
+		private string GetExcelColumnString(int columnNumber)
+		{
+			int dividend = columnNumber;
+			string columnName = String.Empty;
+			int modulo;
+
+			while (dividend > 0)
+			{
+				modulo = (dividend - 1) % 26;
+				columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+				dividend = (int)((dividend - modulo) / 26);
+			}
+
+			return columnName;
 		}
 	}
 }
