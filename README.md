@@ -13,7 +13,7 @@ Excell Document Writer is a dot NET Console to Create Excel File running on Wind
 * Custom Values for Table Headers.
 * Writing Different Type of data in one Iteration.
 * Writing Hyperlink with Custom Link Text.
-* Saving File with DateTime Stamp.
+* Saves File in Documents folder with DateTime Stamp.
 * Releasing Resources.
 
 ## Resources

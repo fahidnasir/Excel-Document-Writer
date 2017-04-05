@@ -55,10 +55,13 @@ namespace ExcelWriter
 			{
 				try
 				{
-					//Throw exception if file already exists and user doesn't overwrite the file.
+					//Catch block for exception if file already exists and user doesn't overwrite the file.
+					//Default location to save file in 'Documents' folder.
+					//You can write absolute path to save the file.
+					// string fileNameWithAbsolutePath = "C:\some-folder\" + fileName;
 					excel.Application.ActiveWorkbook.SaveAs(fileName);
-				
-					//Excel shows the file modification dialog to finally Save or Discard the chagnes.
+
+					//Catch block for exception for if user doesn't save the file when Excel shows the file modification dialog to Save or Discard the chagnes.
 					wb.Close();
 
 					excel.Application.Quit();
