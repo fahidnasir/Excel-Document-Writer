@@ -79,5 +79,26 @@ namespace ExcelWriter
 			}
 			catch (Exception) { }
 		}
+
+		private string GetExcelColumn(int columnNumber, int rowNumber)
+		{
+			return GetExcelColumnString(columnNumber) + rowNumber;
+		}
+
+		private string GetExcelColumnString(int columnNumber)
+		{
+			int dividend = columnNumber;
+			string columnName = String.Empty;
+			int modulo;
+
+			while (dividend > 0)
+			{
+				modulo = (dividend - 1) % 26;
+				columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+				dividend = (int)((dividend - modulo) / 26);
+			}
+
+			return columnName;
+		}
 	}
 }
